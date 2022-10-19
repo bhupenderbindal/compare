@@ -9,14 +9,16 @@ from collections import deque
 class ControlModelEnv(Env):
     def __init__(self):
         self.n_actions = 101
-        self.u_range = 0.30
+        self.resolution = 0.15
+        self.P_parameter=0.003
         self.action_space = Discrete(self.n_actions)
         self.observation_space = Box(low=np.float32(np.array([-10, -10, -10, -10, -10])),
                                      high=np.float32(np.array([10, 10, 10, 10, 10])))
         self.amp_soll = 10
-        self.rewS=1
         self.amp_frei = 20
         self.u_new = 0
+        self.target_deflection = 0
+        self.int_target_error = 0
         self.piezo = [0, 0, 0, 0, 0, 0]
         
         # Laden der Scanlinie 
@@ -32,10 +34,10 @@ class ControlModelEnv(Env):
 
     def reset(self):
         # self.i = random.randint(0, 2000)
-        self.i = random.randint(0, 2700) # Zufälliger Anfangspunkt der Scanlinie
+        self.i = random.randint(0, 2000) # Zufälliger Anfangspunkt der Scanlinie
         self.start_line = self.i
         self.u_new = 0
-        self.rewS=1
+        self.target_deflection = 0
         self.piezo = [0, 0, 0, 0, 0, 0]
         self.state = deque([0, 0, 0, 0, 0], maxlen=5)
         self.scan_lenth = 1000
@@ -48,13 +50,16 @@ class ControlModelEnv(Env):
         # self.top = (self.top_orig*ft+(1-ft)*np.cumsum(np.random.randn(3001)))
         return np.array(self.state)
 
-    def step(self, actions):
+    def step(self, action):
         if self.scan_lenth == self.max_lenth:
             self.top_start = self.top[self.i]
         self.scan_lenth -= 1
         # next state transition 
         # Spannungsberechnung
-        delta_u = (actions * 2 * self.u_range) / (self.n_actions - 1) - self.u_range
+        delta_deflection=(action - ((self.n_actions + 1)/2)) * self.resolution
+        self.target_deflection += delta_deflection
+        deflection_error=self.target_deflection-self.piezo[0]
+        delta_u = deflection_error*self.P_parameter
         self.u_new += delta_u
         self.piezo = simulationfunction(self.piezo[0], self.piezo[1], self.piezo[2],
                                         self.piezo[3], self.piezo[4], self.piezo[5], self.u_new)
@@ -117,11 +122,8 @@ class ControlModelEnv(Env):
         reward=reward_now-punishstd-punishabssum  #*self.rewS
         reward=reward/10000;
         if reward<0:
-            reward= reward * 2
-        elif reward > 0.8:
-            reward= reward * 1.4
+            reward=0
         self.rewS = (reward_now/10**4)**2
-        #print(reward)
         return reward
         
 

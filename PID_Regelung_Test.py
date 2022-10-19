@@ -11,6 +11,7 @@ def pid_regelung(top_data, amp_soll, amp_frei, kp, ki, kd):
     amp_diff_list = []
     u_list = []
     u_new = 0
+    target_deflection=0
     sum_amp_diff_quadrat = 0
     amp_diff_sum = 0
     for t in range(t_end):
@@ -32,34 +33,13 @@ def pid_regelung(top_data, amp_soll, amp_frei, kp, ki, kd):
         pid_p = kp * amp_diff
         pid_i = ki * amp_diff_sum
         pid_d = kd * (amp_diff_list[t] - amp_diff_list[t - 1])
-        u_new = u_new + pid_p + pid_i + pid_d
+        delta_target=round((pid_p + pid_i + pid_d)/0.15)*0.15
+        target_deflection=target_deflection + delta_target
+        #target_deflection=target_deflection + pid_p + pid_i + pid_d
+        def_err=target_deflection-piezo[0]
+        u_new = u_new + def_err*0.003
         
-        # Spannung wird diskretisiert -> Anpassen auf KI Regelung 0.5/201
-        u_new = round(u_new / 0.006) * 0.006
+        
         u_list.append(u_new)
     abweichung = sum_amp_diff_quadrat / t_end
     return deflection, amp, abweichung
-
-
-# x = 30
-# n_flach = 100
-# n_steig = 900
-# asoll = 10
-# afrei = 20
-# pid = [0.02, 0.00005, 0.015]
-# top_flach = [0] * n_flach
-# top_steig = [x] * n_steig
-# top = np.hstack((top_flach, top_steig))
-# pid_def, pid_amp, pid_amp_mse = pid_regelung(top, asoll, afrei, pid[0], pid[1], pid[2])
-#
-# fig, ax = plt.subplots()
-# t_end = len(top) // 10
-# time = np.arange(0, t_end, 0.1)
-# pid_deflections = [pid_def[i] * -1 for i in range(len(pid_def))]
-# ax.plot(time, pid_deflections, color='r', label='Piezoausdehnung durch PID-Regelung', linewidth=1)
-# ax.plot(time, top, color='green', label='Topographie', linewidth=1)
-# plt.ylabel('Länge [nm]')
-# plt.xlabel('Zeit[ms]')
-#
-# plt.title('Testenscann mit Intelligenz und PID-Regelung\n(kp={}, ki={}, kd={})'.format(pid[0], pid[1], pid[2]))
-# plt.show()

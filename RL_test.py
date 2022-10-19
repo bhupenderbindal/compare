@@ -10,32 +10,43 @@ from PID_Regelung_Test import pid_regelung
 amp_soll = 10
 amp_frei = 20
 input_dims = 5
-fc1_dims = 200
-fc2_dims = 200
-fc3_dims = 200
-fc4_dims = 200
-fc5_dims = 200
-fc6_dims = 200
-fc7_dims = 200
-fc8_dims = 200
-fc9_dims = 200
-fc10_dims = 200
-fc11_dims = 200
-fc12_dims = 200
-fc13_dims = 200
-fc14_dims = 200
-fc15_dims = 200
-fc16_dims = 200
-fc17_dims = 200
-fc18_dims = 200
-fc19_dims = 200
-fc20_dims = 200
+fc1_dims = 100
+fc2_dims = 100
+fc3_dims = 100
+fc4_dims = 100
+fc5_dims = 100
+fc6_dims = 100
+fc7_dims = 100
+fc8_dims = 100
+fc9_dims = 100
+fc10_dims = 100
+fc11_dims = 100
+fc12_dims = 100
+fc13_dims = 100
+fc14_dims = 100
+fc15_dims = 100
+fc16_dims = 100
+fc17_dims = 100
+fc18_dims = 100
+fc19_dims = 100
+fc20_dims = 100
+# fc21_dims = 100
+# fc22_dims = 100
+# fc23_dims = 100
+# fc24_dims = 100
+# fc25_dims = 100
+# fc26_dims = 100
+# fc27_dims = 100
+# fc28_dims = 100
+# fc29_dims = 100
+# fc30_dims = 100
 n_actions = 101
-u_range = 0.3
+res = 0.15
 # pid = [0.018, 0.006, 0.018]
 # pid = [0.024, 0.0155, 0.015]
-pid = [0.025, 0.012, 0.016]
-savepath = 'ddqn_PID-KI_Entwicklung_60.pkl'
+pid = [0.1, 0.000, 0.0]
+# pid = [0.02, 0.013, 0.013]
+savepath = 'ddqn_PID-KI_Entwicklung_20.pkl'
 plotqual=1;
 quali=600;
 ma=10;
@@ -66,6 +77,16 @@ class DeepQNetwork(nn.Module):
         self.fc18_dims = fc18_dims
         self.fc19_dims = fc19_dims
         self.fc20_dims = fc20_dims
+        # self.fc21_dims = fc21_dims
+        # self.fc22_dims = fc22_dims
+        # self.fc23_dims = fc23_dims
+        # self.fc24_dims = fc24_dims
+        # self.fc25_dims = fc25_dims
+        # self.fc26_dims = fc26_dims
+        # self.fc27_dims = fc27_dims
+        # self.fc28_dims = fc28_dims
+        # self.fc29_dims = fc29_dims
+        # self.fc30_dims = fc30_dims
         self.n_actions = n_actions
         self.fc1 = nn.Linear(self.input_dims, self.fc1_dims)
         self.fc1.weight.data.normal_(0, 0.1)  # initialization
@@ -124,6 +145,27 @@ class DeepQNetwork(nn.Module):
         self.fc20 = nn.Linear(self.fc19_dims, self.fc20_dims)
         self.fc20.weight.data.normal_(0, 0.1)  # initialization
         
+        # self.fc21 = nn.Linear(self.fc20_dims, self.fc21_dims)
+        # self.fc21.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc22 = nn.Linear(self.fc21_dims, self.fc22_dims)
+        # self.fc22.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc23 = nn.Linear(self.fc22_dims, self.fc23_dims)
+        # self.fc23.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc24 = nn.Linear(self.fc23_dims, self.fc24_dims)
+        # self.fc24.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc25 = nn.Linear(self.fc24_dims, self.fc25_dims)
+        # self.fc25.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc26 = nn.Linear(self.fc25_dims, self.fc26_dims)
+        # self.fc26.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc27 = nn.Linear(self.fc26_dims, self.fc27_dims)
+        # self.fc27.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc28 = nn.Linear(self.fc27_dims, self.fc28_dims)
+        # self.fc28.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc29 = nn.Linear(self.fc28_dims, self.fc29_dims)
+        # self.fc29.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc30 = nn.Linear(self.fc29_dims, self.fc30_dims)
+        # self.fc30.weight.data.normal_(0, 0.1)  # initialization
+        
         
         self.fc21 = nn.Linear(self.fc20_dims, self.n_actions)
         self.fc21.weight.data.normal_(0, 0.1)  # initialization
@@ -155,42 +197,16 @@ class DeepQNetwork(nn.Module):
         x = F.leaky_relu(self.fc18(x))
         x = F.leaky_relu(self.fc19(x))
         x = F.leaky_relu(self.fc20(x))
-        
-        # x = self.fc1(state)
-        # x = self.fc2(x)
-        # x = self.fc3(x)
-        # x = self.fc4(x)
-        # x = self.fc5(x)
-        # x = self.fc6(x)
-        # x = self.fc7(x)
-        # x = self.fc8(x)
-        # x = self.fc9(x)
-        # x = self.fc10(x)
-        
-        # x = F.softplus(self.fc1(state))
-        # x = F.softplus(self.fc2(x))
-        # x = F.softplus(self.fc3(x))
-        
-        # x=self.fc1(state)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc2(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc3(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc4(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc5(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc6(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc7(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc8(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc9(x)
-        # x = F.celu(x)+0.01*x
-        # x=self.fc10(x)
-        # x = F.celu(x)+0.01*x
+        # x = F.leaky_relu(self.fc21(x))
+        # x = F.leaky_relu(self.fc22(x))
+        # x = F.leaky_relu(self.fc23(x))
+        # x = F.leaky_relu(self.fc24(x))
+        # x = F.leaky_relu(self.fc25(x))
+        # x = F.leaky_relu(self.fc26(x))
+        # x = F.leaky_relu(self.fc27(x))
+        # x = F.leaky_relu(self.fc28(x))
+        # x = F.leaky_relu(self.fc29(x))
+        # x = F.leaky_relu(self.fc30(x))
         
         actions = self.fc21(x)
         
@@ -202,18 +218,19 @@ class DeepQNetwork(nn.Module):
 
 def plot_scann_mit_regelung(amplitude, top, ki_def, delta_u, ki_mse, pid_def, pid_amp, pid_mse):
     fig, ax = plt.subplots()
-    # plt.text(-5, 150, 'Amp_MSE zu soll_Amp:\n{}'.format(ki_mse))
+    # plt.text(-5, 100, 'Amp_MSE zu soll_Amp:\n{}'.format(ki_mse))
     plt.text(-50, 0, 'KI-Regelung AMP_MSE:{}\nPID-Regelung AMP_MSE:{}'.format(ki_mse, pid_mse),
               bbox=dict(facecolor='yellow', alpha=0.5), fontsize=10)
+    plt.grid()
     t_end = len(top) / 10 #+ 0.1
     time = np.arange(0, t_end, 0.1)
     ki_deflections = [ki_def[i] * -1 for i in range(len(ki_def))]
     pid_deflections = [pid_def[i] * -1 for i in range(len(pid_def))]
-    ax.plot(time, ki_deflections, color='pink', label='nagetive Ausdehnung durch KI-Regelung', linewidth=1)
-    ax.plot(time, pid_deflections, color='dodgerblue', label='nagetive Ausdehnung durch PID-Regelung', linewidth=1)
+    ax.plot(time, ki_deflections, color='blue', label='negative Ausdehnung durch KI-Regelung', linewidth=1)
+    ax.plot(time, pid_deflections, color='dodgerblue', label='negative Ausdehnung durch PID-Regelung', linewidth=1)
     ax.plot(time, top, color='g', label='Topographie', linewidth=1)
     ax.plot(time, amplitude, color='red', label='Amplitude durch KI-Regelung', linewidth=1)
-    ax.plot(time, pid_amp, color='black', label='Amplitude durch PID-Regelung', linewidth=1)
+    ax.plot(time, pid_amp, color='lightcoral', label='Amplitude durch PID-Regelung', linewidth=1)
     # ax1 = ax.twinx()
     # ax1.plot(time, delta_u, 'y', label='delta U', linewidth=1)
     # # ax1.set_ylim(-1, 1)
@@ -229,16 +246,16 @@ def plot_scann_mit_regelung(amplitude, top, ki_def, delta_u, ki_mse, pid_def, pi
 agent = DeepQNetwork(input_dims, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims, fc7_dims, fc8_dims, fc9_dims, fc10_dims, 
                      fc11_dims, fc12_dims, fc13_dims, fc14_dims, fc15_dims, fc16_dims, fc17_dims, fc18_dims, fc19_dims, fc20_dims, n_actions)
 agent.load_state_dict(T.load(savepath))
-testdaten = np.loadtxt('line9.dat', delimiter=',') #*0.3
-# testdaten = np.loadtxt('line1.dat', delimiter=',')/1
+testdaten = np.loadtxt('line1.dat', delimiter=',')*1
 # testdaten=testdaten[1:500]
 n_testdaten = len(testdaten)
 piezo = [0, 0, 0, 0, 0, 0]
 ki_def = []
 delta_u_list = []
+target_deflection=0;
 u_new = 0
 amp = [amp_soll] * n_testdaten
-amp_diff = deque([0, 0, 0, 0, 0], maxlen=5) 
+amp_diff = deque([0, 0, 0, 0, 0], maxlen=5)
 ki_amp_mes = 0
 qi=1
 for i in range(n_testdaten):
@@ -253,33 +270,31 @@ for i in range(n_testdaten):
     qualitys=actions.detach().numpy()
     aq =np.convolve(qualitys[0,:], np.ones(ma), 'same') / ma
     
-    # https://ai.stackexchange.com/questions/18645/why-are-reinforcement-learning-methods-sample-inefficient
-    steep_zone = [1111,1139,1140,1141,1142,1143,1144,1145,1171]
-    #if plotqual and qi==quali:
-    if plotqual and qi in steep_zone:    
+    if plotqual and qi==quali:
+        
         x = np.array(range(0, n_actions))
-        du = (x * 2 * u_range) / (n_actions - 1) - u_range
+        d_t = (x -((n_actions + 1)/2))*res
         
         figq,axq = plt.subplots()
-        axq.plot(du,qualitys[0,:], color="C0")
-        axq.set_xlabel("Voltage change / V")
+        axq.plot(d_t,qualitys[0,:], color="C0")
+        axq.set_xlabel("height change / nm")
         axq.set_ylabel("Quality", color="C0")
         axq.tick_params(axis='x', color="C0")
         axq.tick_params(axis='y', color="C0")
-        axq.plot(du,aq, color="C1")
+        axq.plot(d_t,aq, color="C1")
         plt.grid()
     
         plt.show()
-        #qi=0
+        qi=0
         
     qi=qi+1
     action = T.argmax(actions).item()
     action=aq.argmax()
-    delta_u_new = (action * 2 * u_range) / (n_actions - 1) - u_range
-    u_new += delta_u_new
+    delta_target = (action -((n_actions + 1)/2))*res
+    target_deflection += delta_target
+    u_new += (target_deflection-piezo[0])*0.003
     piezo = simulationfunction(piezo[0], piezo[1], piezo[2], piezo[3], piezo[4], piezo[5], u_new)
     ki_def.append(piezo[0])
-    delta_u_list.append(delta_u_new)
     ki_amp_mes += ((amp[i] - amp_soll)**2)
 
 ki_amp_mes /= n_testdaten
