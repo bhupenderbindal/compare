@@ -33,6 +33,16 @@ class DeepQNetwork(nn.Module):
         self.fc18_dims = fc18_dims
         self.fc19_dims = fc19_dims
         self.fc20_dims = fc20_dims
+        # self.fc21_dims = fc21_dims
+        # self.fc22_dims = fc22_dims
+        # self.fc23_dims = fc23_dims
+        # self.fc24_dims = fc24_dims
+        # self.fc25_dims = fc25_dims
+        # self.fc26_dims = fc26_dims
+        # self.fc27_dims = fc27_dims
+        # self.fc28_dims = fc28_dims
+        # self.fc29_dims = fc29_dims
+        # self.fc30_dims = fc30_dims
         self.n_actions = n_actions
         self.fc1 = nn.Linear(*self.input_dims, self.fc1_dims)
         self.fc1.weight.data.normal_(0, 0.1)  # initialization
@@ -91,6 +101,27 @@ class DeepQNetwork(nn.Module):
         self.fc20 = nn.Linear(self.fc19_dims, self.fc20_dims)
         self.fc20.weight.data.normal_(0, 0.1)  # initialization
         
+        # self.fc21 = nn.Linear(self.fc20_dims, self.fc21_dims)
+        # self.fc21.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc22 = nn.Linear(self.fc21_dims, self.fc22_dims)
+        # self.fc22.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc23 = nn.Linear(self.fc22_dims, self.fc23_dims)
+        # self.fc23.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc24 = nn.Linear(self.fc23_dims, self.fc24_dims)
+        # self.fc24.weight.data.normal_(0, 0.1)  # initialization
+        # self.fc25 = nn.Linear(self.fc24_dims, self.fc25_dims)
+        # self.fc25.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc26 = nn.Linear(self.fc25_dims, self.fc26_dims)
+        # self.fc26.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc27 = nn.Linear(self.fc26_dims, self.fc27_dims)
+        # self.fc27.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc28 = nn.Linear(self.fc27_dims, self.fc28_dims)
+        # self.fc28.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc29 = nn.Linear(self.fc28_dims, self.fc29_dims)
+        # self.fc29.weight.data.normal_(0, 0.1)  # initialization        
+        # self.fc30 = nn.Linear(self.fc29_dims, self.fc30_dims)
+        # self.fc30.weight.data.normal_(0, 0.1)  # initialization
+        
         
         self.fc21 = nn.Linear(self.fc20_dims, self.n_actions)
         self.fc21.weight.data.normal_(0, 0.1)  # initialization
@@ -122,6 +153,16 @@ class DeepQNetwork(nn.Module):
         x = F.leaky_relu(self.fc18(x))
         x = F.leaky_relu(self.fc19(x))
         x = F.leaky_relu(self.fc20(x))
+        # x = F.leaky_relu(self.fc21(x))
+        # x = F.leaky_relu(self.fc22(x))
+        # x = F.leaky_relu(self.fc23(x))
+        # x = F.leaky_relu(self.fc24(x))
+        # x = F.leaky_relu(self.fc25(x))
+        # x = F.leaky_relu(self.fc26(x))
+        # x = F.leaky_relu(self.fc27(x))
+        # x = F.leaky_relu(self.fc28(x))
+        # x = F.leaky_relu(self.fc29(x))
+        # x = F.leaky_relu(self.fc30(x))
         
         # x = self.fc1(state)
         # x = self.fc2(x)
@@ -177,7 +218,7 @@ class DDQNAgent(object):
         self.n_actions = n_actions                      # Anzahl der Aktionen (Ausgabeschicht)
         self.mem_size = mem_size                        # Größe des Speichers
         self.batch_size = batch_size                    # ?? Danach wird das Netz ersetzt?
-        self.replace_target_cnt = replace               # ?? =200
+        self.replace_target_cnt = replace               # ?? =100
         self.reset()                                    # Ruft die Reset Funktion auf
     
     def reset(self):
@@ -188,17 +229,17 @@ class DDQNAgent(object):
         self.memoryKI = ReplayBuffer(self.mem_size, self.input_dims, self.n_actions)
         # self.q_eval = DeepQNetwork(n_actions=self.n_actions,
         #                            input_dims=self.input_dims,
-        #                            fc1_dims=2200, fc2_dims=2200)
+        #                            fc1_dims=2100, fc2_dims=2100)
         # self.q_next = DeepQNetwork(n_actions=self.n_actions,
         #                            input_dims=self.input_dims,
-        #                            fc1_dims=2200, fc2_dims=2200)
+        #                            fc1_dims=2100, fc2_dims=2100)
         
         # self.q_eval = DeepQNetwork(n_actions=self.n_actions,
         #                             input_dims=self.input_dims,
-        #                             fc1_dims=2200, fc2_dims=2200, fc3_dims=2200)
+        #                             fc1_dims=2100, fc2_dims=2100, fc3_dims=2100)
         # self.q_next = DeepQNetwork(n_actions=self.n_actions,
         #                             input_dims=self.input_dims,
-        #                             fc1_dims=2200, fc2_dims=2200, fc3_dims=2200)
+        #                             fc1_dims=2100, fc2_dims=2100, fc3_dims=2100)
         
         # self.q_eval = DeepQNetwork(n_actions=self.n_actions,
         #                             input_dims=self.input_dims,
@@ -209,27 +250,45 @@ class DDQNAgent(object):
         
         # self.q_eval = DeepQNetwork(n_actions=self.n_actions,
         #                             input_dims=self.input_dims,
-        #                             fc1_dims=200, fc2_dims=200, fc3_dims=200, fc4_dims=200, fc5_dims=200, fc6_dims=200, fc7_dims=200)
+        #                             fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, fc6_dims=100, fc7_dims=100)
         # self.q_next = DeepQNetwork(n_actions=self.n_actions,
         #                             input_dims=self.input_dims,
-        #                             fc1_dims=200, fc2_dims=200, fc3_dims=200, fc4_dims=200, fc5_dims=200, fc6_dims=200, fc7_dims=200)
+        #                             fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, fc6_dims=100, fc7_dims=100)
+        
+        # self.q_eval = DeepQNetwork(n_actions=self.n_actions,
+        #                             input_dims=self.input_dims,
+        #                             fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, 
+        #                             fc6_dims=100, fc7_dims=100, fc8_dims=100, fc9_dims=100, fc10_dims=100,
+        #                             fc11_dims=100, fc12_dims=100, fc13_dims=100, fc14_dims=100, fc15_dims=100, 
+        #                             fc16_dims=100, fc17_dims=100, fc18_dims=100, fc19_dims=100, fc20_dims=100,
+        #                             fc21_dims=100, fc22_dims=100, fc23_dims=100, fc24_dims=100, fc25_dims=100, 
+        #                             fc26_dims=100, fc27_dims=100, fc28_dims=100, fc29_dims=100, fc30_dims=100)
+        # self.q_next = DeepQNetwork(n_actions=self.n_actions,
+        #                             input_dims=self.input_dims,
+        #                             fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, 
+        #                             fc6_dims=100, fc7_dims=100, fc8_dims=100, fc9_dims=100, fc10_dims=100,
+        #                             fc11_dims=100, fc12_dims=100, fc13_dims=100, fc14_dims=100, fc15_dims=100, 
+        #                             fc16_dims=100, fc17_dims=100, fc18_dims=100, fc19_dims=100, fc20_dims=100,
+        #                             fc21_dims=100, fc22_dims=100, fc23_dims=100, fc24_dims=100, fc25_dims=100, 
+        #                             fc26_dims=100, fc27_dims=100, fc28_dims=100, fc29_dims=100, fc30_dims=100)
+        
         
         self.q_eval = DeepQNetwork(n_actions=self.n_actions,
                                     input_dims=self.input_dims,
-                                    fc1_dims=200, fc2_dims=200, fc3_dims=200, fc4_dims=200, fc5_dims=200, 
-                                    fc6_dims=200, fc7_dims=200, fc8_dims=200, fc9_dims=200, fc10_dims=200,
-                                    fc11_dims=200, fc12_dims=200, fc13_dims=200, fc14_dims=200, fc15_dims=200, 
-                                    fc16_dims=200, fc17_dims=200, fc18_dims=200, fc19_dims=200, fc20_dims=200)
+                                    fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, 
+                                    fc6_dims=100, fc7_dims=100, fc8_dims=100, fc9_dims=100, fc10_dims=100,
+                                    fc11_dims=100, fc12_dims=100, fc13_dims=100, fc14_dims=100, fc15_dims=100, 
+                                    fc16_dims=100, fc17_dims=100, fc18_dims=100, fc19_dims=100, fc20_dims=100)
         self.q_next = DeepQNetwork(n_actions=self.n_actions,
                                     input_dims=self.input_dims,
-                                    fc1_dims=200, fc2_dims=200, fc3_dims=200, fc4_dims=200, fc5_dims=200, 
-                                    fc6_dims=200, fc7_dims=200, fc8_dims=200, fc9_dims=200, fc10_dims=200,
-                                    fc11_dims=200, fc12_dims=200, fc13_dims=200, fc14_dims=200, fc15_dims=200, 
-                                    fc16_dims=200, fc17_dims=200, fc18_dims=200, fc19_dims=200, fc20_dims=200)
+                                    fc1_dims=100, fc2_dims=100, fc3_dims=100, fc4_dims=100, fc5_dims=100, 
+                                    fc6_dims=100, fc7_dims=100, fc8_dims=100, fc9_dims=100, fc10_dims=100,
+                                    fc11_dims=100, fc12_dims=100, fc13_dims=100, fc14_dims=100, fc15_dims=100, 
+                                    fc16_dims=100, fc17_dims=100, fc18_dims=100, fc19_dims=100, fc20_dims=100)
         
         
         self.optimizer = optim.Adam(self.q_eval.parameters(), lr=self.lr, weight_decay=0.001)
-        # self.scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer,0.975)
+        # self.scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer,0.999)
         self.loss = nn.MSELoss()
         
         
@@ -263,26 +322,16 @@ class DDQNAgent(object):
         return states, actions, rewards, states_, dones
 
     def pid_action(self,observation):
-        u_range=0.3
+        res=0.15
         n_actions=self.n_actions
         
-        #[0.017, 0.011, 0.018] #damping
-        #[0.026, 0.016, 0.0165] #performance
-        
-        # pid_p = 0.026 * observation[4]
-        # pid_i = 0.016 * sum(observation)
-        # pid_d = 0.0165 * (observation[4]-observation[3])
-        pid_p = 0.018 * observation[4]
-        pid_i = 0.008 * sum(observation)
-        pid_d = 0.018 * (observation[4]-observation[3])
+        pid_p = 5 * observation[4]
+        pid_i = 0.001 * sum(observation)
+        pid_d = 2.8 * (observation[4]-observation[3])
         
         pid_action = pid_p + pid_i + pid_d
         
-        action = (pid_action + u_range) * (n_actions - 1) / (2 * u_range)
-        # if 0.02 > np.random.random():
-        #     action=action + 3 * np.random.normal()
-        # if 0.1 > np.random.random():
-        #     action=action + 1 * np.random.normal()    
+        action = (pid_action/res) + ((n_actions + 1)/2)
         action = round(action)
         if action > (self.n_actions-1): action = self.n_actions-1
         if action < 0 : action = 0
@@ -301,8 +350,8 @@ class DDQNAgent(object):
             action=self.pid_action(observation)
             pid_counter=pid_counter+1
             flag_act=2
-        # elif observation[4]*observation[3]>0 and (abs(observation[4])>9 and abs(observation[3])>8):
-        elif ((abs(observation[4])>9 and abs(observation[3])>8) and  abs(observation[2])>7):
+        elif abs(observation[2])>5 and (abs(observation[4])>8 and abs(observation[3])>7):
+        # elif (abs(observation[4])>8 and abs(observation[3])>7):
             pid_counter=pid_counter+1
             action=self.pid_action(observation)
             flag_act=2   
@@ -317,13 +366,15 @@ class DDQNAgent(object):
             
             action=T.argmax(actions).item()
             flag_act=1
+            if np.random.random()<0.05:
+                action=action+2*np.random.randn()
             # if np.random.random()<0.5:
             #     action=T.argmax(actions).item()
             # else:
             #     action=qualitys.argmax()
             # if np.random.random()<0.01:
             #     action=qualdist.argmax()
-            if np.random.random()<0.01:
+            if np.random.random()<0.05:
                 action=(self.n_actions-1)*np.random.rand()
                 
                    
@@ -350,7 +401,7 @@ class DDQNAgent(object):
     def replace_target_network(self):
         if self.replace_target_cnt is not None and \
                 self.learn_step_counter % self.replace_target_cnt == 0:
-            # wird nur alle 200 Lernschritte ausgeführt
+            # wird nur alle 100 Lernschritte ausgeführt
             self.q_next.load_state_dict(self.q_eval.state_dict())
 
 
@@ -360,7 +411,7 @@ class DDQNAgent(object):
 
         self.optimizer.zero_grad()
 
-        # alle 200 schritte wird es einmal ersetzt
+        # alle 100 schritte wird es einmal ersetzt
         # siehe oben mit dem Modulo rechnen
         self.replace_target_network()
 
@@ -481,19 +532,6 @@ class ReplayBuffer(object):
         self.terminal_memory[index] = done
 
         self.mem_cntr += 1
-        
-        if reward < 0:
-            for i in range(10):
-                self.state_memory[index] = state
-                self.action_memory[index] = action
-                self.reward_memory[index] = reward
-                self.new_state_memory[index] = state_
-                self.terminal_memory[index] = done
-                index = index + 1
-                # print(self.mem_cntr, index, reward)
-
-                self.mem_cntr += 1
-                
 
     def sample_buffer(self, batch_size):
         # Nimmt aus dem bisherigen Speicher batch_size-viele Einträge raus
